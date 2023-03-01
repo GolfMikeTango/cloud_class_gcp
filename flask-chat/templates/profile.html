@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  <p>Welcome {{ user.first_name }}!</p>
+</h1>
+<div class="column is-4 is-offset-4">
+  <div class="box">
+    <h1 class="is-center">User Info</h1>
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>First Name:</th>
+          <td>{{ user.first_name }}</td>
+        </tr>
+        <tr>
+          <th>Last Name:</th>
+          <td>{{ user.last_name }}</td>
+        </tr>
+        <tr>
+          <th>Email:</th>
+          <td>{{ user.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<h2 class="title">
+  <p>Upload Center:</p>
+</h2>
+
+<div class="column is-4 is-offset-4">
+  <div class="box">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="notification is-danger">
+      {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <form action="/profile" method="post" enctype="multipart/form-data">
+      <div id="file-uploader" class="file has-name">
+        <label class="file-label">
+          <input class="file-input" type="file" name="file">
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="fas fa-upload"></i>
+            </span>
+            <span class="file-label">
+              Choose a file…
+            </span>
+          </span>
+          <span class="file-name">
+            Filename
+          </span>
+        </label>
+      </div>
+      <button class="button is-block is-success">Upload</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const fileInput = document.querySelector('#file-uploader input[type=file]');
+  fileInput.onchange = () => {
+    if (fileInput.files.length > 0) {
+      const fileName = document.querySelector('#file-uploader .file-name');
+      fileName.textContent = fileInput.files[0].name;
+    }
+  }
+</script>
+
+<h2 class="title">
+  <p>Download Center:</p>
+</h2>
+
+{% if word_count %}
+<a href="/profile/download_file">Download Text File</a>
+<div class="column is-4 is-offset-4">
+  <div class="box is-narrow">
+    <label class="label">Word Count:</label>
+    <table class="table">
+      <tbody>
+        {% for word, count in word_count.items() %}
+        <tr>
+          <td>{{word}}</td>
+          <td>{{count}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
